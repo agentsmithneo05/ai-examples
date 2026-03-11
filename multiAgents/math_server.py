@@ -1,15 +1,24 @@
+# math_server.py
+import logging
 from mcp.server.fastmcp import FastMCP
 
-# 1. Initialize the MCP Server
-mcp = FastMCP("AdvancedMath")
+# Prevent logs from leaking into the pipe
+logging.basicConfig(level=logging.INFO)
+mcp = FastMCP("InsightMath")
+
 
 @mcp.tool()
-def calculate_compound_interest(principal: float, rate: float, time: int) -> str:
-    """Calculates compound interest for financial analysis."""
-    amount = principal * (1 + rate/100)**time
-    interest = amount - principal
-    return f"After {time} years, the total is {amount:.2f} (Interest: {interest:.2f})"
+def calculate_growth(principal: float, percentage_growth: float, years: int) -> str:
+    """Calculates future value. principal: start amount, percentage_growth: e.g. 12, years: time."""
+    rate = float(percentage_growth)
+    if 0 < rate < 1:
+        rate = rate * 100
+
+    total = float(principal) * (1 + (rate / 100)) ** int(years)
+    return f"SIMULATION_SUCCESS: {total:.2f}"
+
 
 if __name__ == "__main__":
-    # Run using 'stdio' so our LangGraph agent can talk to it via terminal
-    mcp.run(transport="stdio")
+    # In some versions of FastMCP, SSE is triggered like this:
+    mcp.run(transport="sse")
+    # Note: If it doesn't allow 'port', it will default to 8000.
