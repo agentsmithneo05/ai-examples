@@ -1,0 +1,8 @@
+langchain-core==1.2.28
+langchain-groq==1.1.2
+python-dotenv
+torch 
+transformers 
+accelerate
+mcp
+jupyter-mcp-server
